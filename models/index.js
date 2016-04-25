@@ -12,7 +12,10 @@ mongoose.connect(config.db, function(err) {
 });
 
 require('./user.js');
+require('./comment.js');
+require('./secret.js');
 
 
 exports.User = mongoose.model('User');
-
+exports.Comment = mongoose.model('Comment');
+exports.Secret = mongoose.model('Secret');

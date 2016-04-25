@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+
 var ObjectId = Schema.ObjectId;
 
-var secretSchema = new Schema({
+var SecretSchema = new Schema({
     owner: ObjectId,
     content:String,
     images:[String],
@@ -32,4 +33,4 @@ var secretSchema = new Schema({
     comments:[ObjectId]
 });
 
-mongoose.model('Secret',secretSchema);
+mongoose.model('Secret',SecretSchema);
