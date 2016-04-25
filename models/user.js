@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var ObjectId = Schema.ObjectId;
 
 var UserSchema = new Schema({
     firstName : String,
@@ -36,14 +37,8 @@ var UserSchema = new Schema({
         type: Number,
         default: 0
     },
-    followings: {
-        type: Number,
-        default: 0
-    },
-    followers: {
-        type: Number,
-        default: 0
-    }
+    followings: [ObjectId],
+    followers:  [ObjectId]
 });
 
 mongoose.model('User', UserSchema);

@@ -2,7 +2,6 @@
 var userRoute = require('./routes/userRoute');
 
 
-
 module.exports = function(app){
     
     app.get('/user', userRoute.getUserList);
