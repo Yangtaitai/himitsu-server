@@ -5,6 +5,10 @@ module.exports.getSecretList = function (req, res) {
     res.json({result: true, data:[]});
 }
 
+module.exports.getSecret = function (req,res) {
+    
+}
+
 module.exports.createSecret = function(req,res){
     console.log(req.body);
     
@@ -19,4 +23,12 @@ module.exports.createSecret = function(req,res){
           err:err 
        }); 
     });
+}
+
+module.exports.updateSecret = function(req,res){
+    
+}
+
+module.exports.deleteSecret = function (req,res) {
+    
 }
