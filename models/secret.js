@@ -27,8 +27,8 @@ var SecretSchema = new Schema({
         default: false
     },
     updatedAt:{
-        type: Boolean,
-        default: false
+        type: Date,
+        default: Date.now
     },
     comments:[ObjectId]
 });

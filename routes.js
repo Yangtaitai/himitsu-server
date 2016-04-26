@@ -13,7 +13,7 @@ module.exports = function(app){
     
     app.get('/user', userRoute.getUserList);
     
-    app.get('/user/:id', userRoute.getUser);
+    app.get('/user/:id', userRoute.ensureAuthenticated, userRoute.getUser);
     
     app.post('/user', userRoute.createUser);
     
@@ -39,7 +39,7 @@ module.exports = function(app){
     
     app.get('/comment/:id',commentRoute.getComment);
     
-    app.post('comment',commentRoute.createComment);
+    app.post('/comment',commentRoute.createComment);
     
     app.delete('comment/:id', commentRoute.deleteComment);
 }

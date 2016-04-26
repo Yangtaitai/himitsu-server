@@ -4,7 +4,10 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
 var UserSchema = new Schema({
-    firstName : String,
+    firstName : {
+        type: String,
+        default:'secret'
+    },
     lastName : String,
     name : {
         type: String,

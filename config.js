@@ -4,7 +4,7 @@
  */
 
 var config = {
-	website_name: 'Pay Together',
+	website_name: 'TopSecret Today',
 	description: 'Make our life easier!',
 	site_static_host: '',
 	port: 80,
