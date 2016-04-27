@@ -2,7 +2,30 @@ var Comment = require('../models').Comment;
 
 module.exports.getCommentList = function (req,res) {
     console.log(req.query);
-    res.json({ersult:true,data:[]});
+    
+    var queryParams = {};
+    
+    if (req.query.content) {
+        queryParams.content = {
+            "$regex": req.query.firstName,
+            "$options": "i"
+        }
+    }
+    
+    var query = Comment.find(queryParams);
+    
+    query.select("secret content");
+    
+    query.exec(function(err, comment) {
+        console.log(req.params);
+
+        res.json({
+            result: !err,
+            data: comment,
+            err: err
+        });
+    })
+   
 }
 
 module.exports.getComment = function (req,res) {

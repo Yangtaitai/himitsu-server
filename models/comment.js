@@ -4,7 +4,11 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
 var commentSchema = new Schema({
-    secret:ObjectId,
+   
+    secret:{
+        type: ObjectId,
+        required: true
+    },
     content:String,
     replyTo:ObjectId,
     isAnonymous	:{

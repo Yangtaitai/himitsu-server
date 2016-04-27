@@ -11,13 +11,19 @@ var UserSchema = new Schema({
     lastName : String,
     name : {
         type: String,
+        required: true,
         index: {unique:true}
     },
     email : {
         type: String,
+        required: true,
         index: {unique:true}
     },
-    password : String,
+    password : {
+        type: String,
+        required: true
+    },
+    
     avatar : String,
     gender : {
         type: String,

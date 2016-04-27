@@ -15,25 +15,20 @@ module.exports.getSecretList = function (req, res) {
         }
     }
     
-    if (req.query.name) {
-        queryParams.name = req.query.name;
+    if (req.query.owner) {
+        queryParams.owner = req.query.name;
     }
-    
-    // if (req.query._id) {
-    //     queryParams.id = req.query._id;
-    // }
     
     var query = Secret.find(queryParams);
     
     query.where('isPublic','true'); // condition
     
-    query.select("name content isPublic");
+    query.select("owner content isPublic");
     
     query.exec(function(err, secrets) {
 
         console.log(req.params);
         
-
         res.json({
             result: !err,
             data: secrets,
@@ -44,6 +39,21 @@ module.exports.getSecretList = function (req, res) {
 
 module.exports.getSecret = function (req,res) {
     
+    console.log(req.params);
+    
+    var select = "owner content createdAt";
+    
+    if (req.secret._id = req.params.id) {
+        select = "owner content images isPublic isAnonymous likes forwards createdAt";
+    }
+    
+    Secret.findById(req.params.id, select, function (err,secret) {
+        res.json({
+           result: !err,
+           data: secret,
+           err:err 
+        });
+    })
 }
 
 module.exports.createSecret = function(req,res){
