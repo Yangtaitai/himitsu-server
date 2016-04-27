@@ -48,10 +48,10 @@ module.exports = function(app) {
                         return done(err);
                     }
                     if (!user) {
-                        return done(null, false, 'ERR_INVALID_USER');
+                        return done(null, false, {message: 'Incorrect user email. '});
                     }
                     if (user.password != md5(password)) {
-                        return done(null, false, 'ERR_INVALID_PASSWORD');
+                        return done(null, false, {message:'Incorrect password. '});
                     }
 
                     user.loggedAt = new Date();

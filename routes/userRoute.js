@@ -33,6 +33,9 @@ module.exports.login = function (req, res, next) {
             if (err) {
                 return next(err);
             }
+            
+            console.log('successful login');
+            console.log(req.user);
 
             var user = {};
             user.id = req.user._id;
@@ -47,6 +50,7 @@ module.exports.login = function (req, res, next) {
                 result: true,
                 data: req.user
             });
+            // return res.redirect('/users/ + user.name');
 
         });
     })(req, res, next);
@@ -85,6 +89,7 @@ module.exports.getUserList = function(req, res){
     console.log(req.user);
     var queryParams = {};
     
+    // contain match
     if(req.query.firstName){
         queryParams.firstName = { 
             "$regex": req.query.firstName, 
@@ -98,6 +103,8 @@ module.exports.getUserList = function(req, res){
             "$options": "i" 
         }
     }
+    
+    // exact match
     
     if(req.query.name){
         queryParams.name = req.query.name;
@@ -113,9 +120,9 @@ module.exports.getUserList = function(req, res){
     
     var query = User.find(queryParams);
     
-    if(req.isAuthenticated()){
+    if(req.isAuthenticated()){    //authenticate successful return following parameters
         query.select("name email gender firstName lastName avatar");
-    }else{
+    }else{                         
         query.select("name gender firstName lastName");
     }
     
@@ -143,7 +150,7 @@ module.exports.getUser = function(req, res){
     var select = "name email gender firstName lastName avatar";
     
     if(req.user._id == req.params.id){
-        select = "name email gender firstName lastName avatar loggedAt";
+        select = "name email gender firstName lastName avatar";
     }
     
     User.findById(req.params.id, select, function(err, user){
