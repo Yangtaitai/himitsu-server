@@ -1,23 +1,23 @@
 
 var passport = require('passport');
-    LocalStrategy = require('passport-local').strategy;
-    
+LocalStrategy = require('passport-local').strategy;
+
 var md5 = require('MD5');
 var User = require('../models').User;
 
 
-module.exports.ensureAuthenticated = function (req,res,next) {
-    if(req.isAuthenticated()){
+module.exports.ensureAuthenticated = function(req, res, next) {
+    if (req.isAuthenticated()) {
         return next();
     }
     res.json({
-        result:false,
-        err:'ERR_NOT_ALLOWED'
+        result: false,
+        err: 'ERR_NOT_ALLOWED'
     });
 };
 
-module.exports.login = function (req, res, next) {
-    passport.authenticate('local', function (err, user, info) {
+module.exports.login = function(req, res, next) {
+    passport.authenticate('local', function(err, user, info) {
         if (err) {
             console.log(err);
             return next(err);
@@ -29,11 +29,11 @@ module.exports.login = function (req, res, next) {
             });
             //return res.redirect('/m_login_failure?callback='+req.body.callback);
         }
-        req.logIn(user, function (err) {
+        req.logIn(user, function(err) {
             if (err) {
                 return next(err);
             }
-            
+
             console.log('successful login');
             console.log(req.user);
 
@@ -54,7 +54,7 @@ module.exports.login = function (req, res, next) {
 
         });
     })(req, res, next);
-    
+
     // User.findOne({'email':req.body.email},function (err,user) {
     //     if(!user) {
     //         res.json({
@@ -77,159 +77,168 @@ module.exports.login = function (req, res, next) {
     //         }
     //     }
     // });
-    
+
 };
 
-module.exports.getUserList = function(req, res){
-    
+module.exports.getUserList = function(req, res) {
+
     // var firstName = req.query.firstName;
-    
-    
-    console.log('user logged? '+req.isAuthenticated());
+
+
+    console.log('user logged? ' + req.isAuthenticated());
     console.log(req.user);
     var queryParams = {};
-    
+
     // contain match
-    if(req.query.firstName){
-        queryParams.firstName = { 
-            "$regex": req.query.firstName, 
-            "$options": "i" 
+    if (req.query.firstName) {
+        queryParams.firstName = {
+            "$regex": req.query.firstName,
+            "$options": "i"
         }
     }
-    
-    if(req.query.lastName){
-        queryParams.lastName = { 
-            "$regex": req.query.lastName, 
-            "$options": "i" 
+
+    if (req.query.lastName) {
+        queryParams.lastName = {
+            "$regex": req.query.lastName,
+            "$options": "i"
         }
     }
-    
+
     // exact match
-    
-    if(req.query.name){
+
+    if (req.query.name) {
         queryParams.name = req.query.name;
     }
-    
-    if(req.query.email){
+
+    if (req.query.email) {
         queryParams.email = req.query.email;
     }
-    
-    if(req.query.gender){
+
+    if (req.query.gender) {
         queryParams.gender = req.query.gender;
     }
-    
+
     var query = User.find(queryParams);
-    
-    if(req.isAuthenticated()){    //authenticate successful return following parameters
+
+    if (req.isAuthenticated()) {    //authenticate successful return following parameters
         query.select("name email gender firstName lastName avatar");
-    }else{                         
+    } else {
         query.select("name gender firstName lastName");
     }
-    
-    
-    
-    query.exec(function(err, users){
-        
+
+
+
+    query.exec(function(err, users) {
+
         console.log(req.params);
-    
+
         res.json({
-            result:!err,
+            result: !err,
             data: users,
             err: err
         });
-    
+
         // res.json({result:true,data});
     });
 }
 
 
-module.exports.getUser = function(req, res){
-    
-    var id = req.params.id;
-    
-    console.log(req.params);
-    
+module.exports.getUser = function(req, res) {
+
+    console.log(req.user.id); // login user
+
+    console.log(req.params); // user/:id information
+
     var select;
-    
-    if(id){
-        select = "name email gender firstName lastName avatar";
+
+    if (req.user.id == req.params.id) {  // if it is user itself
+        select = "name email gender firstName lastName avatar publishedSecret";
+    } else {                             // otherwise
+        select = "name gender avatar";
     }
-    
-    User.findById(req.params.id, select, function(err, user){
-    
+
+    User.findById(req.params.id, select, function(err, user) {
+
         res.json({
-            result:!err,
+            result: !err,
             data: user,
             err: err
         });
-    
+
         // res.json({result:true,data});
     });
-    
-    
+
+
 }
 
 module.exports.createUser = function(req, res, next) {
-    
+
     var user = new User();
     user.name = req.body.name;
     user.email = req.body.email;
     user.password = md5(req.body.password);
     user.firstName = req.body.firstName;
     user.lastName = req.body.lastName;
-    
-    if (user.email == ('' && null) || user.password == ('' && null)|| user.name == ('' && null) ) {
+
+    if (user.email == ('' && null) || user.password == ('' && null) || user.name == ('' && null)) {
         return res.json({
-            result:false, 
-            err:'ERR_PARAM_ERR'
+            result: false,
+            err: 'ERR_PARAM_ERR'
         });
     }
-    
-    
-    
-    user.save(function(err, userData){
-        res.json( {
+
+
+
+    user.save(function(err, userData) {
+        res.json({
             result: !err,
-            data : userData,
+            data: userData,
             err: err
         });
     });
-    
+
 }
 
-module.exports.deleteUser = function (req,res,next) {
-    
-  
-}
 
-module.exports.updateUser = function (req,res) {
+module.exports.updateUser = function(req, res) {
     var userId = req.params.id;
-    
-    if(userId){ 
-        var data = {};
-        
-        User.Schema.eachPath(function(path){
-            if(req.body.hasOwnProperty(path))
-                data[path] = req.body[path];
-        });
-        
-        console.log(data);
-        console.log(req.body);
-        
-        User.update({_id:userId}, data, function(err,user){
-            if(err){
-                res.json({
-                    result:false,
-                    err:'ERR_DB_ERR'
+
+    if (userId) {
+        if (userId != req.user.id) {
+            res.json({
+                result: false,
+                err: 'ERR_NOT_ALLOWED'
+            });
+        } else {
+            
+            User.findById(req.user.id, function(err, user) {
+                
+                if (req.body.firstName)
+                    user.firstName = req.body.firstName;
+                if (req.body.lastName)
+                    user.lastName = req.body.lastName;
+                if (req.body.password)
+                    user.password = req.body.password;
+                if (req.body.gender)
+                    user.gender = req.body.gender;
+                if (req.body.birthday)
+                    user.birthday = req.body.birthday;
+
+
+                user.save(function(err, saveUser) {
+                    return res.json({
+                        result: !err,
+                        data: saveUser,
+                        err: err
+                    });
                 });
-            } 
-        });
-    } else {
-        res.json({
-            result: false,
-            err: 'ERR_URL_ERR'
-        });
+            })
+        }
     }
 }
 
 
+module.exports.deleteUser = function(req, res, next) {
+
+
+}
