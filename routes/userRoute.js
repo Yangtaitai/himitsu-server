@@ -145,11 +145,13 @@ module.exports.getUserList = function(req, res){
 
 module.exports.getUser = function(req, res){
     
+    var id = req.params.id;
+    
     console.log(req.params);
     
-    var select = "name email gender firstName lastName avatar";
+    var select;
     
-    if(req.user._id == req.params.id){
+    if(id){
         select = "name email gender firstName lastName avatar";
     }
     
@@ -173,6 +175,8 @@ module.exports.createUser = function(req, res, next) {
     user.name = req.body.name;
     user.email = req.body.email;
     user.password = md5(req.body.password);
+    user.firstName = req.body.firstName;
+    user.lastName = req.body.lastName;
     
     if (user.email == ('' && null) || user.password == ('' && null)|| user.name == ('' && null) ) {
         return res.json({
@@ -199,7 +203,33 @@ module.exports.deleteUser = function (req,res,next) {
 }
 
 module.exports.updateUser = function (req,res) {
+    var userId = req.params.id;
     
+    if(userId){ 
+        var data = {};
+        
+        User.Schema.eachPath(function(path){
+            if(req.body.hasOwnProperty(path))
+                data[path] = req.body[path];
+        });
+        
+        console.log(data);
+        console.log(req.body);
+        
+        User.update({_id:userId}, data, function(err,user){
+            if(err){
+                res.json({
+                    result:false,
+                    err:'ERR_DB_ERR'
+                });
+            } 
+        });
+    } else {
+        res.json({
+            result: false,
+            err: 'ERR_URL_ERR'
+        });
+    }
 }
 
 

@@ -8,7 +8,10 @@ var UserSchema = new Schema({
         type: String,
         default:'secret'
     },
-    lastName : String,
+    lastName : {
+        type: String,
+        default:'baobao'
+    },
     name : {
         type: String,
         required: true,
