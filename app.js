@@ -10,6 +10,10 @@ var himitusPassport = require('./plugins/passport.js');
 
 var app = express();
 
+var cors = require('cors');
+app.use(cors({origin:true,
+    credentials:true}));
+
 //set all Post data into req.body
 app.use(bodyParser.json());
 
