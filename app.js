@@ -26,9 +26,6 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-app.use(cors({origin:true,
-    credentials:true}));
-
 //set logged user information into req.user
 himitusPassport(app);
 
