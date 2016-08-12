@@ -3,7 +3,7 @@ var Secret = require('../models').Secret;
 module.exports.getSecretList = function(req, res) {
 
     console.log(req.query);
-    // res.json({result: true, data:[]});
+
     console.log(req.secret);
 
     var queryParams = {};
@@ -26,7 +26,7 @@ module.exports.getSecretList = function(req, res) {
     query.select("owner content likes createdAt images");
 
     query.populate('owner', 'firstName lastName', 'User');
-    
+
     query.populate('likes', 'firstName lastName', 'User')
 
     query.exec(function(err, secrets) {
@@ -45,27 +45,46 @@ module.exports.getSecret = function(req, res) {
 
     console.log(req.params);
 
+    var query = Secret.findById(req.params);
+
     var select;
+    var secretId = req.params.id;
 
-    if (req.params.id) {
-        select = "owner content images isPublic isAnonymous likes forwards createdAt";
-    }
+    Secret.findById({}).populate('User').exec(function(err, secret) {
 
-    Secret.findById(req.params.id, select, function(err, secret) {
-        res.json({
-            result: !err,
-            data: secret,
-            err: err
-        });
+        if (secret.owner != null && secret.owner == req.user.id) {
+            select = "owner content images isPublic isAnonymous likes forwards createdAt";
+            res.json({
+                result: !err,
+                data: secret,
+                err: err
+            });
+        }
+        if (secret.owner != req.user.id) {
+            select = "content images isPublic likes";
+            res.json({
+                result: !err,
+                data: secret,
+                err: err
+            });
+        }
     })
 }
+// Secret.findById(secretId, select, function(err, secret) {
+//     res.json({
+//         result: !err,
+//         data: secret,
+//         err: err
+//     });
+// })
 
 
 
 module.exports.createSecret = function(req, res) {
     console.log(req.body);
 
-    if (!req.body.owner || !req.body.content) {
+    // if (!req.body.owner || !req.body.content) 
+    if (!req.body.content) {
         return res.json({
             result: false,
             err: 'ERR_INVALID_DATA'
@@ -74,7 +93,7 @@ module.exports.createSecret = function(req, res) {
     }
 
     var secret = new Secret();
-    secret.owner = req.body.owner;
+    secret.owner = req.user.id;
     secret.content = req.body.content;
     secret.isPublic = req.body.isPublic;
     secret.isAnonymous = req.body.isAnonymous;
@@ -92,7 +111,7 @@ module.exports.createSecret = function(req, res) {
 }
 
 module.exports.updateSecret = function(req, res) {
-    
+
     var id = req.params.id;
 
     Secret.findById(id, function(err, secret) {
@@ -106,8 +125,7 @@ module.exports.updateSecret = function(req, res) {
         if (req.body.content)
             secret.content = req.body.content;
 
-
-        if (req.body.isAnonymous != null || req.body.isAnonymous!=undefined)
+        if (req.body.isAnonymous != null || req.body.isAnonymous != undefined)
             secret.isAnonymous = req.body.isAnonymous;
 
         if (req.body.isPublic != undefined)
@@ -117,53 +135,53 @@ module.exports.updateSecret = function(req, res) {
             secret.isAnonymous = req.body.isAnonymous;
 
         console.log(req.body.likes);
-        if (req.body.likes){
+        if (req.body.likes) {
             /*
              likes: [{
                  id:'OBJECTID',addFlag:true/false
              }, .... ]
             */
-            
+
             var addMap = {};
             var removeMap = {};
-            for(var i=0;i<req.body.likes.length;i++){
-                if(req.body.likes[i].addFlag){
+            for (var i = 0; i < req.body.likes.length; i++) {
+                if (req.body.likes[i].addFlag) {
                     addMap[req.body.likes[i].id] = true;
-                }else{
+                } else {
                     removeMap[req.body.likes[i].id] = true;
                 }
             }
-            
+
             var list = [];
-            
-            for(var i=0; i<secret.likes.length;i++){
+
+            for (var i = 0; i < secret.likes.length; i++) {
                 var userId = secret.likes[i];
-                
+
                 if (!removeMap[userId]) {
                     list.push(userId);
                 }
-                
+
                 if (addMap[userId]) {
                     addMap[userId] = false;
                 }
             }
-            
-            for(var key in addMap){
-                if(addMap[key])
+
+            for (var key in addMap) {
+                if (addMap[key])
                     list.push(key);
             }
-            
+
             secret.likes = list;
-            
+
         }
-            
-        secret.save(function (err, savedSecret) {
-                return res.json({
-                   result: !err,
-                   data: savedSecret,
-                   err: err 
-                });
-            })
+
+        secret.save(function(err, savedSecret) {
+            return res.json({
+                result: !err,
+                data: savedSecret,
+                err: err
+            });
+        })
 
 
     });
@@ -173,23 +191,23 @@ module.exports.updateSecret = function(req, res) {
 
 module.exports.deleteSecret = function(req, res) {
     var id = req.params.id;
-    
-    if(!id){
+
+    if (!id) {
         return res.json({
-            result:false,
-            err:'ERR_PARAM_ERR'
+            result: false,
+            err: 'ERR_PARAM_ERR'
         });
     }
-    
-    Secret.findById(id).remove(function (err) {
-        if(err){
+
+    Secret.findById(id).remove(function(err) {
+        if (err) {
             return res.json({
-                result:false,
-                err:'ERR_DB_ERR'
+                result: false,
+                err: 'ERR_DB_ERR'
             });
         }
         return res.json({
-            result:true
+            result: true
         })
     })
 }

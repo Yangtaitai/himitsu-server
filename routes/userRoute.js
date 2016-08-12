@@ -152,9 +152,9 @@ module.exports.getUser = function(req, res) {
     var select;
 
     if (req.user.id == req.params.id) {  // if it is user itself
-        select = "name email gender firstName lastName avatar publishedSecret";
+        select = "name email gender birthday firstName lastName avatar publishedSecret following followers createdAt loggedAt";
     } else {                             // otherwise
-        select = "name gender avatar";
+        select = "name gender avatar publishedSecret following followers createdAt ";
     }
 
     User.findById(req.params.id, select, function(err, user) {
@@ -218,7 +218,7 @@ module.exports.updateUser = function(req, res) {
                 if (req.body.lastName)
                     user.lastName = req.body.lastName;
                 if (req.body.password)
-                    user.password = req.body.password;
+                    user.password = md5(req.body.password);
                 if (req.body.gender)
                     user.gender = req.body.gender;
                 if (req.body.birthday)
