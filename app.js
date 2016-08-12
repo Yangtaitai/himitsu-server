@@ -17,12 +17,6 @@ app.use(cors({origin:true,
 //set all Post data into req.body
 app.use(bodyParser.json());
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://topsecret.today");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-
 app.use(session({
     secret: config.session_secret,
     store: new MongoStore({
