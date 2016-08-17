@@ -15,23 +15,23 @@ module.exports = function(app){
     
     app.get('/user', userRoute.getUserList);
     
-    app.get('/user/:userId', userRoute.ensureAuthenticated, userRoute.getUser);
+    app.get('/user/:id', userRoute.ensureAuthenticated, userRoute.getUser);
     
-    app.put('/user/:userId',userRoute.updateUser);
+    app.put('/user/:id',userRoute.updateUser);
         
-    app.delete('/user/:userId',userRoute.deleteUser);
+    app.delete('/user/:id',userRoute.deleteUser);
     
     //secret
     
     app.get('/secret',secretRoute.getSecretList);
     
-    app.get('/secret/:secretId',secretRoute.getSecret);
+    app.get('/secret/:id',secretRoute.getSecret);
     
     app.post('/secret',secretRoute.createSecret);
     
-    app.put('/secret/:secretId',secretRoute.updateSecret);
+    app.put('/secret/:id',secretRoute.updateSecret);
     
-    app.delete('/secret/:secretId', secretRoute.deleteSecret);
+    app.delete('/secret/:id', secretRoute.deleteSecret);
     
     //comment
     
