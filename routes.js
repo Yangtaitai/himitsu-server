@@ -13,7 +13,7 @@ module.exports = function(app){
     
     //user
     
-    app.get('/users', userRoute.getUserList);
+    app.get('/user', userRoute.getUserList);
     
     app.get('/user/:userId', userRoute.ensureAuthenticated, userRoute.getUser);
     
@@ -23,7 +23,7 @@ module.exports = function(app){
     
     //secret
     
-    app.get('/secrets',secretRoute.getSecretList);
+    app.get('/secret',secretRoute.getSecretList);
     
     app.get('/secret/:secretId',secretRoute.getSecret);
     
@@ -31,11 +31,11 @@ module.exports = function(app){
     
     app.put('/secret/:secretId',secretRoute.updateSecret);
     
-    app.delete('/secrets/:secretId', secretRoute.deleteSecret);
+    app.delete('/secret/:secretId', secretRoute.deleteSecret);
     
     //comment
     
-    app.get('/comments',commentRoute.getCommentList);
+    app.get('/comment',commentRoute.getCommentList);
     
     app.get('/comment/:id',commentRoute.getComment);
     
