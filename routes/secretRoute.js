@@ -23,9 +23,9 @@ module.exports.getSecretList = function(req, res) {
 
     query.where('isPublic', 'true'); // condition
 
-    query.select("owner content likes createdAt images");
+    query.select("username content likes createdAt images");
 
-    query.populate('owner', 'firstName lastName', 'User');
+    query.populate('username', 'firstName lastName', 'User');
 
     query.populate('likes', 'firstName lastName', 'User')
 
@@ -53,7 +53,7 @@ module.exports.getSecret = function(req, res) {
     Secret.findById({}).populate('User').exec(function(err, secret) {
 
         if (secret.owner != null && secret.owner == req.user.id) {
-            select = "owner content images isPublic isAnonymous likes forwards createdAt";
+            select = "username content images isPublic isAnonymous likes forwards createdAt";
             res.json({
                 result: !err,
                 data: secret,
@@ -93,7 +93,7 @@ module.exports.createSecret = function(req, res) {
     }
 
     var secret = new Secret();
-    secret.owner = req.user.id;
+    secret.username = req.user.id;
     secret.content = req.body.content;
     secret.isPublic = req.body.isPublic;
     secret.isAnonymous = req.body.isAnonymous;
