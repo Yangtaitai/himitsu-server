@@ -179,6 +179,7 @@ module.exports.createUser = function(req, res, next) {
     user.password = md5(req.body.password);
     user.firstName = req.body.firstName;
     user.lastName = req.body.lastName;
+    user.gender = req.body.gender;
 
     if (user.email == ('' && null) || user.password == ('' && null) || user.name == ('' && null)) {
         return res.json({
@@ -186,8 +187,6 @@ module.exports.createUser = function(req, res, next) {
             err: 'ERR_PARAM_ERR'
         });
     }
-
-
 
     user.save(function(err, userData) {
         res.json({

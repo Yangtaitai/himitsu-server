@@ -8,34 +8,34 @@ module.exports = function(app){
     
     
     app.post('/login',userRoute.login);
+
+    app.post('/signup',userRoute.createUser);
     
     //user
     
-    app.get('/user', userRoute.getUserList);
+    app.get('/users', userRoute.getUserList);
     
-    app.get('/user/:id', userRoute.ensureAuthenticated, userRoute.getUser);
+    app.get('/user/:userId', userRoute.ensureAuthenticated, userRoute.getUser);
     
-    app.post('/user', userRoute.createUser);
-    
-    app.put('/user/:id',userRoute.updateUser);
+    app.put('/user/:userId',userRoute.updateUser);
         
-    app.delete('/user/:id',userRoute.deleteUser);
+    app.delete('/user/:userId',userRoute.deleteUser);
     
     //secret
     
-    app.get('/secret',secretRoute.getSecretList);
+    app.get('/secrets',secretRoute.getSecretList);
     
-    app.get('/secret/:id',secretRoute.getSecret);
+    app.get('/secret/:secretId',secretRoute.getSecret);
     
     app.post('/secret',secretRoute.createSecret);
     
-    app.put('/secret/:id',secretRoute.updateSecret);
+    app.put('/secret/:secretId',secretRoute.updateSecret);
     
-    app.delete('/secret/:id', secretRoute.deleteSecret);
+    app.delete('/secrets/:secretId', secretRoute.deleteSecret);
     
     //comment
     
-    app.get('/comment',commentRoute.getCommentList);
+    app.get('/comments',commentRoute.getCommentList);
     
     app.get('/comment/:id',commentRoute.getComment);
     
