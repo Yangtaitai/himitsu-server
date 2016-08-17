@@ -106,8 +106,8 @@ module.exports.getUserList = function(req, res) {
 
     // exact match
 
-    if (req.query.name) {
-        queryParams.name = req.query.name;
+    if (req.query.username) {
+        queryParams.username = req.query.username;
     }
 
     if (req.query.email) {
@@ -121,9 +121,9 @@ module.exports.getUserList = function(req, res) {
     var query = User.find(queryParams);
 
     if (req.isAuthenticated()) {    //authenticate successful return following parameters
-        query.select("name email gender firstName lastName avatar");
+        query.select("username email gender firstName lastName avatar");
     } else {
-        query.select("name gender firstName lastName");
+        query.select("username gender firstName lastName");
     }
 
 
@@ -152,9 +152,9 @@ module.exports.getUser = function(req, res) {
     var select;
 
     if (req.user.id == req.params.id) {  // if it is user itself
-        select = "name email gender birthday firstName lastName avatar publishedSecret following followers createdAt loggedAt";
+        select = "username email gender birthday firstName lastName avatar publishedSecret following followers createdAt loggedAt";
     } else {                             // otherwise
-        select = "name gender avatar publishedSecret following followers createdAt ";
+        select = "username gender avatar publishedSecret following followers createdAt ";
     }
 
     User.findById(req.params.id, select, function(err, user) {
