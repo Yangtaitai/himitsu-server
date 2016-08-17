@@ -11,6 +11,7 @@ var commentSchema = new Schema({
     },
     content:String,
     replyTo:ObjectId,
+    createdAt:Date,
     isAnonymous	:{
         type: Boolean,
         default: false

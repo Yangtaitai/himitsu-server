@@ -12,7 +12,7 @@ var UserSchema = new Schema({
         type: String,
         default:'baobao'
     },
-    name : {
+    username : {
         type: String,
         required: true,
         index: {unique:true}
