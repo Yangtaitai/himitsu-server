@@ -9,7 +9,7 @@ module.exports = function(app){
     
     app.post('/login',userRoute.login);
 
-    app.post('/signup',userRoute.createUser);
+    app.post('/user',userRoute.createUser);
     
     //user
     
