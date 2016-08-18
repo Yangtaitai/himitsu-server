@@ -48,7 +48,7 @@ module.exports.login = function(req, res, next) {
             return res.json({
                 id: user.id,
                 result: true,
-                data: req.user
+                data: user
             });
             // return res.redirect('/users/ + user.name');
 
