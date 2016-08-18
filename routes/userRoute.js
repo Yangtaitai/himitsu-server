@@ -135,8 +135,7 @@ module.exports.getUserList = function(req, res) {
         res.json({
             result: !err,
             data: users,
-            err: err,
-            test:'heihei'
+            err: err
         });
 
         // res.json({result:true,data});
