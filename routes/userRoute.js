@@ -46,7 +46,7 @@ module.exports.login = function(req, res, next) {
             user.avatar = req.user.avatar;
 
             return res.json({
-                id: user.id,
+                // id: user.id,
                 result: true,
                 data: user
             });
