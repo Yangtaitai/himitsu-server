@@ -39,7 +39,7 @@ module.exports.login = function(req, res, next) {
 
             var user = {};
             user.id = req.user._id;
-            user.username = req.user.username;
+            user.name = req.user.name;
             user.firstname = req.user.firstname;
             user.lastname = req.user.lastname;
             user.gender = req.user.gender;
