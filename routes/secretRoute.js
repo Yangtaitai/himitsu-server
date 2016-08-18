@@ -15,17 +15,17 @@ module.exports.getSecretList = function(req, res) {
         }
     }
 
-    if (req.query.username) {
-        queryParams.username = req.query.username;
+    if (req.query.owner) {
+        queryParams.owner = req.query.owner;
     }
 
     var query = Secret.find(queryParams);
 
     query.where('isPublic', 'true'); // condition
 
-    query.select("username content likes createdAt images");
+    query.select("owner content likes createdAt images");
 
-    query.populate('username', 'firstName lastName', 'User');
+    query.populate('owner', 'firstName lastName', 'User');
 
     query.populate('likes', 'firstName lastName', 'User')
 
@@ -52,15 +52,15 @@ module.exports.getSecret = function(req, res) {
 
     Secret.findById({}).populate('User').exec(function(err, secret) {
 
-        if (secret.username != null && secret.username == req.user.id) {
-            select = "username content images isPublic isAnonymous likes forwards createdAt";
+        if (secret.owner != null && secret.owner == req.user.id) {
+            select = "owner content images isPublic isAnonymous likes forwards createdAt";
             res.json({
                 result: !err,
                 data: secret,
                 err: err
             });
         }
-        if (secret.username != req.user.id) {
+        if (secret.owner != req.user.id) {
             select = "content images isPublic likes";
             res.json({
                 result: !err,
@@ -93,7 +93,7 @@ module.exports.createSecret = function(req, res) {
     }
 
     var secret = new Secret();
-    secret.username = req.user.username;
+    secret.owner = req.user.id;
     secret.content = req.body.content;
     secret.isPublic = req.body.isPublic;
     secret.isAnonymous = req.body.isAnonymous;

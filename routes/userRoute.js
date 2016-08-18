@@ -106,8 +106,8 @@ module.exports.getUserList = function(req, res) {
 
     // exact match
 
-    if (req.query.username) {
-        queryParams.username = req.query.username;
+    if (req.query.name) {
+        queryParams.name = req.query.name;
     }
 
     if (req.query.email) {
@@ -121,9 +121,9 @@ module.exports.getUserList = function(req, res) {
     var query = User.find(queryParams);
 
     if (req.isAuthenticated()) {    //authenticate successful return following parameters
-        query.select("username email gender firstName lastName avatar");
+        query.select("name email gender firstName lastName avatar");
     } else {
-        query.select("username gender firstName lastName");
+        query.select("name gender firstName lastName");
     }
 
 
@@ -152,9 +152,9 @@ module.exports.getUser = function(req, res) {
     var select;
 
     if (req.user.id == req.params.id) {  // if it is user itself
-        select = "username email gender birthday firstName lastName avatar publishedSecret following followers createdAt loggedAt";
+        select = "name email gender birthday firstName lastName avatar publishedSecret following followers createdAt loggedAt";
     } else {                             // otherwise
-        select = "username gender avatar publishedSecret following followers createdAt ";
+        select = "name gender avatar publishedSecret following followers createdAt ";
     }
 
     User.findById(req.params.id, select, function(err, user) {
@@ -171,19 +171,17 @@ module.exports.getUser = function(req, res) {
 
 }
 
-
-// user register
 module.exports.createUser = function(req, res, next) {
 
     var user = new User();
-    user.username = req.body.username;
+    user.name = req.body.name;
     user.email = req.body.email;
     user.password = md5(req.body.password);
     user.firstName = req.body.firstName;
     user.lastName = req.body.lastName;
     user.gender = req.body.gender;
 
-    if (user.email == ('' && null) || user.password == ('' && null) || user.username == ('' && null)) {
+    if (user.email == ('' && null) || user.password == ('' && null) || user.name == ('' && null)) {
         return res.json({
             result: false,
             err: 'ERR_PARAM_ERR'

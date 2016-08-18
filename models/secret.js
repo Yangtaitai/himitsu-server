@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
 var SecretSchema = new Schema({
-    username: {
+    owner: {
         type: ObjectId,
         required: true
     },
