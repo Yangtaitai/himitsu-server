@@ -8,11 +8,11 @@ module.exports = function(app){
     
     
     app.post('/login',userRoute.login);
-
-    app.post('/user',userRoute.createUser);
     
     //user
     
+    app.post('/user',userRoute.createUser);   //sign up
+
     app.get('/user', userRoute.getUserList);
     
     app.get('/user/:id', userRoute.ensureAuthenticated, userRoute.getUser);
