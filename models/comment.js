@@ -5,7 +5,7 @@ var ObjectId = Schema.ObjectId;
 
 var commentSchema = new Schema({
 
-    user:{
+    owner:{
         type: ObjectId,
         required: true
     },
