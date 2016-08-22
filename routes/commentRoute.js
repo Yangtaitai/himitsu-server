@@ -38,6 +38,7 @@ module.exports.createComment = function (req,res) {
     
     var comment = new Comment();
     
+    comment.owner = req.body.owner;
     comment.secret = req.body.secret;
     comment.content = req.body.content;
     
