@@ -1,23 +1,34 @@
 var Comment = require('../models').Comment;
 
-module.exports.getCommentList = function (req,res) {
-    console.log(req.query);
-    
+module.exports.getCommentList = function(req, res) {
+
+    console.log("req.query" + req.query);
+
+    console.log("req.comment " + req.comment);
+
     var queryParams = {};
-    
-    if (req.query.content) {
-        queryParams.content = {
-            "$regex": req.query.firstName,
+
+    if (req.query.secret) {
+        queryParams.secret = {
+            "$regex": req.query.secret,
             "$options": "i"
         }
     }
-    
+
+    if (req.query.secret) {
+        queryParams.secret = req.query.secret;
+    }
+
     var query = Comment.find(queryParams);
-    
-    query.select("secret content");
-    
+
+    query.select("owner secret content");
+
+    query.populate('owner', 'firstName lastName', 'User');
+
+    query.populate('secret', 'content', 'Secret');
+
     query.exec(function(err, comment) {
-        console.log(req.params);
+        console.log("req.params" + req.params);
 
         res.json({
             result: !err,
@@ -25,32 +36,32 @@ module.exports.getCommentList = function (req,res) {
             err: err
         });
     })
-   
+
 }
 
-module.exports.getComment = function (req,res) {
-    
+module.exports.getComment = function(req, res) {
+
 }
 
-module.exports.createComment = function (req,res) {
-    
+module.exports.createComment = function(req, res) {
+
     console.log(req.body);
-    
+
     var comment = new Comment();
-    
+
     comment.owner = req.body.owner;
     comment.secret = req.body.secret;
     comment.content = req.body.content;
-    
-    comment.save(function (err,commentData) {
+
+    comment.save(function(err, commentData) {
         res.json({
-            result:!err,
+            result: !err,
             data: commentData,
-            err:err
+            err: err
         });
     });
 }
 
-module.exports.deleteComment = function (req,res) {
-    
+module.exports.deleteComment = function(req, res) {
+
 }
