@@ -27,7 +27,7 @@ module.exports.getSecretList = function(req, res) {
 
     query.populate('owner', 'firstName lastName', 'User');
 
-    query.populate('likes', 'firstName lastName', 'User')
+    query.populate('likes', 'firstName lastName', 'User');
 
     query.exec(function(err, secrets) {
 
@@ -43,40 +43,40 @@ module.exports.getSecretList = function(req, res) {
 
 module.exports.getSecret = function(req, res) {
 
-    console.log(req.params);
+        console.log(req.params);
 
-    var query = Secret.findById(req.params);
+        var query = Secret.findById(req.params);
 
-    var select;
-    var secretId = req.params.id;
+        var select;
+        var secretId = req.params.id;
 
-    Secret.findById({}).populate('User').exec(function(err, secret) {
+        Secret.findById({}).populate('User').exec(function(err, secret) {
 
-        if (secret.owner != null && secret.owner == req.user.id) {
-            select = "owner content images isPublic isAnonymous likes forwards createdAt";
-            res.json({
-                result: !err,
-                data: secret,
-                err: err
-            });
-        }
-        if (secret.owner != req.user.id) {
-            select = "content images isPublic likes";
-            res.json({
-                result: !err,
-                data: secret,
-                err: err
-            });
-        }
-    })
-}
-// Secret.findById(secretId, select, function(err, secret) {
-//     res.json({
-//         result: !err,
-//         data: secret,
-//         err: err
-//     });
-// })
+            if (secret.owner != null && secret.owner == req.user.id) {
+                select = "owner content images isPublic isAnonymous likes forwards createdAt";
+                res.json({
+                    result: !err,
+                    data: secret,
+                    err: err
+                });
+            }
+            if (secret.owner != req.user.id) {
+                select = "content images isPublic likes";
+                res.json({
+                    result: !err,
+                    data: secret,
+                    err: err
+                });
+            }
+        })
+    }
+    // Secret.findById(secretId, select, function(err, secret) {
+    //     res.json({
+    //         result: !err,
+    //         data: secret,
+    //         err: err
+    //     });
+    // })
 
 
 
