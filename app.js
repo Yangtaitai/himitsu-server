@@ -20,6 +20,8 @@ app.use(cors({
 //set all Post data into req.body
 app.use(bodyParser.json());
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(session({
     secret: config.session_secret,
     store: new MongoStore({
